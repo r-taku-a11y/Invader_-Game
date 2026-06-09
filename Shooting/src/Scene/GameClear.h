@@ -17,23 +17,13 @@ public:
 		RETURN_TITLE
 	};
 
-	// コンストラクタ
-	GameClear(void);
+	GameClear(void);		// コンストラクタ
+	~GameClear(void);		// デストラクタ
 
-	// デストラクタ
-	~GameClear(void);
-
-	// 初期化
-	void Init(void);
-
-	// 更新
-	void Update(void);
-
-	// 描画
-	void Draw(void);
-
-	// 解放処理
-	void Release(void);
+	void Init(void);		// 初期化
+	void Update(void);		// 更新
+	void Draw(void);		// 描画
+	void Release(void);		// 解放処理
 
 private:
 

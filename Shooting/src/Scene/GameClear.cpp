@@ -25,8 +25,7 @@ void GameClear::Init(void)
 void GameClear::Update(void)
 {
 	// InputManagerの取得
-	InputManager& input
-		= InputManager::GetInstance();
+	InputManager& input = InputManager::GetInstance();
 
 	// 上キー
 	if (input.IsTrgDown(KEY_INPUT_UP))
@@ -60,7 +59,7 @@ void GameClear::Update(void)
 			// もう一度プレイ
 		case PLAY_AGAIN:
 			// ゲームシーンに遷移させる
-			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMESENEN);
+			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMESEMEN);
 			break;
 
 			// タイトル画面へ戻る
@@ -85,4 +84,9 @@ void GameClear::Draw(void)
 		// 選択中
 		//DrawString(Application::SCREEN_SIZE_X)
 	}
+}
+
+// 解放
+void GameClear::Release(void)
+{
 }

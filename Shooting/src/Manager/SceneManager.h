@@ -10,7 +10,7 @@ public:
 	{
 		NONE,
 		TITLE,			// タイトル
-		GAMESENEN,		// ゲームシーン
+		GAMESEMEN,		// ゲームシーン
 		GAMEOVER,		// ゲームオーバー	
 		GAMECLEAR		// ゲームクリア
 	};
@@ -38,7 +38,7 @@ private:
 	*/
 	SceneManager(const SceneManager&) = delete;
 
-	// コピーの禁止SceneManager同氏の代入を禁止
+	// コピーの禁止SceneManager同士の代入を禁止
 	SceneManager& operator=(const SceneManager&)=delete;
 
 	// 現在のシーン

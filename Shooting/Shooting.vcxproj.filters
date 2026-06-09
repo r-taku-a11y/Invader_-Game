@@ -15,6 +15,9 @@
     <ClInclude Include="src\Scene\GameClear.h" />
     <ClInclude Include="src\Manager\InputManager.h" />
     <ClInclude Include="src\Common\Vector2.h" />
+    <ClInclude Include="src\Objekct\Player.h" />
+    <ClInclude Include="src\Objekct\Enemy.h" />
+    <ClInclude Include="src\Objekct\EnemyManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
@@ -25,5 +28,8 @@
     <ClCompile Include="src\Scene\GameClear.cpp" />
     <ClCompile Include="src\Manager\InputManager.cpp" />
     <ClCompile Include="src\Common\Vector2.cpp" />
+    <ClCompile Include="src\Objekct\Player.cpp" />
+    <ClCompile Include="src\Objekct\Enemy.cpp" />
+    <ClCompile Include="src\Objekct\EnemyManager.cpp" />
   </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@
 #include <DxLib.h>
 #include <string>
 #include "Scene/Title.h"
+#include "Scene/GameSenen.h"
 
 class Application
 {
@@ -60,6 +61,7 @@ private:
 
 	// インスタンスのポインター
 	Title title_;
+	GameSenen gamesenen;
 
 	// 静的インスタンス
 	static Application* instance_;

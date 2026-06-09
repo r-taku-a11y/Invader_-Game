@@ -19,6 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Objekct\EnemyManager.h" />
+    <ClInclude Include="src\Objekct\Enemy.h" />
+    <ClInclude Include="src\Objekct\Player.h" />
     <ClInclude Include="src\Manager\InputManager.h" />
     <ClInclude Include="src\Scene\GameClear.h" />
     <ClInclude Include="src\Manager\SceneManager.h" />
@@ -29,6 +32,9 @@
     <ClInclude Include="src\Common\Vector2.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Objekct\EnemyManager.cpp" />
+    <ClCompile Include="src\Objekct\Enemy.cpp" />
+    <ClCompile Include="src\Objekct\Player.cpp" />
     <ClCompile Include="src\Manager\InputManager.cpp" />
     <ClCompile Include="src\Scene\GameClear.cpp" />
     <ClCompile Include="src\Manager\SceneManager.cpp" />

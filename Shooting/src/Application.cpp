@@ -1,13 +1,14 @@
 #include <DxLib.h>
 #include "Application.h"
 #include "Manager/SceneManager.h"
+#include "Manager/InputManager.h"
 
 // インスタンスの生成
 Application* Application::instance_ = nullptr;
 
-// データパス関連
-const std::string Application::PATH_IMAGE  = "Data/Image/";
-const std::string Application::PATH_SOUND  = "Data/Sound/";
+//// データパス関連
+//const std::string Application::PATH_IMAGE  = "Data/Image/";
+//const std::string Application::PATH_SOUND  = "Data/Sound/";
 
 // 明示的にインスタンスを生成する
 void Application::CreateInstance(void)
@@ -42,7 +43,7 @@ void Application::Init(void)
 	SetUseDirect3DVersion(DX_DIRECT3D_11);
 	isInitFail_ = false;
 
-	SetUsePixelLighting(true);
+	//SetUsePixelLighting(true);
 
 	if (DxLib_Init() == -1)
 	{
@@ -80,18 +81,39 @@ void Application::Run(void)
 			lastFrameTime = currentTime;
 			frameCnt++;
 
+			InputManager::GetInstance().Update();
+
 			// 画面を初期化
 			ClearDrawScreen();
 
 			// シーンの更新・描画
 			switch (SceneManager::GetInstance().GetScene())
 			{
+			// タイトル
 			case SceneManager::SCENE_ID::TITLE:
 
 				title_.Update();
+
+				// タイトルからゲーム開始
+				if (title_.IsStartGame())
+				{
+					// ゲームシーン初期化
+					gamesenen.Init();
+
+					title_.Release();
+
+					// シーン切り替え
+					SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMESEMEN);
+				}
 				title_.Draw();
 				break;
+			// ゲームシーン
+			case SceneManager::SCENE_ID::GAMESEMEN:
 
+				gamesenen.Update();
+				gamesenen.Draw();
+
+				break;
 
 			default:
 				break;
@@ -108,7 +130,10 @@ void Application::Run(void)
 // 解放
 void Application::Release(void)
 {
+	// タイトル画面の開放
 	title_.Release();
+	// ゲームシーンの開放
+	gamesenen.Release();
 
 	// DxLib終了
 	if (DxLib_End() == -1)

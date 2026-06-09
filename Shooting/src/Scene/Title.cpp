@@ -1,5 +1,6 @@
 #include "Title.h"
 #include "../Manager/SceneManager.h"
+#include "../Manager/InputManager.h"
 #include "../Application.h"
 
 // コンストラクタ
@@ -54,7 +55,7 @@ void Title::Update(void)
 
 	if (CheckHitKey(KEY_INPUT_RETURN))
 	{
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMESENEN);
+		StartGame = true;
 	}
 }
 

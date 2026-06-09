@@ -1,5 +1,6 @@
 #pragma once
-
+#include "../Objekct/Player.h"
+#include "../Objekct/EnemyManager.h"
 
 class GameSenen
 {
@@ -14,9 +15,12 @@ public:
 	void Release(void);			// 解放
 
 	// デバックの描画
-	void DrawDebug(void);
+	// void DrawDebug(void);
 
 private:
 
+	// インスタンスのポインター
+	Player player;
+	EnemyManager enemy;
 };
 
