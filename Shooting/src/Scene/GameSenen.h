@@ -1,6 +1,7 @@
 #pragma once
 #include "../Objekct/Player.h"
 #include "../Objekct/EnemyManager.h"
+#include "../Manager/NetworkManager.h"
 
 class GameSenen
 {
@@ -22,5 +23,6 @@ private:
 	// インスタンスのポインター
 	Player player;
 	EnemyManager enemy;
+	NetworkManager network;
 };
 

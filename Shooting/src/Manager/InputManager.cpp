@@ -394,4 +394,9 @@ bool InputManager::IsPadBtnTrgUp(JOYPAD_NO no, JOYPAD_BTN btn) const
 	return padInfos_[static_cast<int>(no)].IsTrgUp[static_cast<int>(btn)];
 }
 
+int InputManager::GetPadLX(JOYPAD_NO no) const
+{
+	return padInfos_[static_cast<int>(no)].AKeyLX;
+}
+
 

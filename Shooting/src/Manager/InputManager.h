@@ -128,6 +128,8 @@ public:
 	bool IsPadBtnTrgUp(JOYPAD_NO no, JOYPAD_BTN btn) const;
 	//------------------------------------------------------------------
 
+	int GetPadLX(JOYPAD_NO no) const;
+
 private:
 	// キー情報
 	struct Info

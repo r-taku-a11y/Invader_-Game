@@ -14,6 +14,8 @@ GameSenen::~GameSenen(void)
 // 初期化
 void GameSenen::Init(void)
 {
+	// UDP通信開始
+	network.Init();
 	// プレイヤーの初期化
 	player.Init();
 	// 敵の初期化

@@ -150,7 +150,8 @@ void EnemyManager::Update(void)
 // 描画
 void EnemyManager::Draw(void)
 {
-	DrawFormatString(10, 10, GetColor(255, 255, 255), "Enemy Speed : %.2f", moveSpeed_);
+	// 敵のスピードのデバック用の表示
+	//DrawFormatString(10, 10, GetColor(255, 255, 255), "Enemy Speed : %.2f", moveSpeed_);
 
 	for (auto& enemy : enemyList_)
 	{
