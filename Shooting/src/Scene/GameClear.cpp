@@ -24,48 +24,37 @@ void GameClear::Init(void)
 // 更新
 void GameClear::Update(void)
 {
-	// InputManagerの取得
 	InputManager& input = InputManager::GetInstance();
 
-	// 上キー
-	if (input.IsTrgDown(KEY_INPUT_UP))
+	// 左キー
+	if (input.IsTrgDown(KEY_INPUT_LEFT))
 	{
-		selectMenu_--;
-
-		//一番上でさらに上を押すと一番下に移動させる
-		if (selectMenu_ < 0)
-		{
-			selectMenu_ = MENU_NUM - 1;
-		}
+		selectMenu_ = PLAY_AGAIN;
 	}
 
-	// 下キー
-	if (input.IsTrgDown(KEY_INPUT_DOWN))
+	// 右キー
+	if (input.IsTrgDown(KEY_INPUT_RIGHT))
 	{
-		selectMenu_++;
-
-		// 一番下でさらに下を押したら一番上に移動させる
-		if (selectMenu_ >= MENU_NUM)
-		{
-			selectMenu_ = 0;
-		}
+		selectMenu_ = RETURN_TITLE;
 	}
 
-	// とりあえず今はデバックなのでエンターキーで実行させる
+	// 決定
 	if (input.IsTrgDown(KEY_INPUT_RETURN))
 	{
 		switch (selectMenu_)
 		{
 			// もう一度プレイ
 		case PLAY_AGAIN:
-			// ゲームシーンに遷移させる
+
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMESEMEN);
+
 			break;
 
-			// タイトル画面へ戻る
+			// タイトルへ戻る
 		case RETURN_TITLE:
-			// タイトルの遷移
+
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+
 			break;
 		}
 	}
@@ -75,15 +64,27 @@ void GameClear::Update(void)
 // 描画
 void GameClear::Draw(void)
 {
-	// 背景の描画
-	DrawGraph(0, 0, gameClearHandle_, TRUE);
+	// GAME CLEAR
+	DrawString(300,200,"GAME CLEAR !!",GetColor(255, 255, 0));
 
-	// PLAY AGAIN
+	// PLAY AGAIN選択中
 	if (selectMenu_ == PLAY_AGAIN)
 	{
-		// 選択中
-		//DrawString(Application::SCREEN_SIZE_X)
+		DrawString(180,350,"> PLAY AGAIN",GetColor(255, 255, 255));
+
+		DrawString(450,350,"RETURN TITLE",GetColor(128, 128, 128));
 	}
+	// RETURN TITLE選択中
+	else
+	{
+		DrawString(180,350,"PLAY AGAIN",GetColor(128, 128, 128));
+
+		DrawString(450,350,"> RETURN TITLE",GetColor(255, 255, 255));
+	}
+
+	// 操作説明
+	DrawString(180,500,"LEFT/RIGHT : SELECT   ENTER : DECIDE",GetColor(255, 255, 255));
+
 }
 
 // 解放

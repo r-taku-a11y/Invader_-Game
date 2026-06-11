@@ -1,4 +1,5 @@
 #pragma once
+
 class Enemy
 {
 public:
@@ -34,6 +35,7 @@ public:
 
 	// サイズ取得
 	int GetWidth(void)const;					// 横幅の取得
+	int GetHeight(void)const;					// 高さの取得
 
 private:
 

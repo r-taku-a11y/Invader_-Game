@@ -1,6 +1,5 @@
 #pragma once
 #include <DxLib.h>
-#include"../Application.h"
 #include"../Common/Vector2.h"
 
 class GameClear
@@ -29,9 +28,6 @@ private:
 
 	// 現在選択中のメニュー
 	int selectMenu_;
-
-	// 画像関係
-	int gameClearHandle_;
 
 };
 

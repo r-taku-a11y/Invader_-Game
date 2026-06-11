@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "../Application.h"
 #include "../Manager/InputManager.h"
+#include "../Manager/NetworkManager.h"
 
 // コンストラクタ
 Player::Player(void)
@@ -14,6 +15,9 @@ Player::Player(void)
 
 	// プレイヤースピード
 	moveSpeed_ = 5.0f;
+
+	// 弾の初期化
+	prevButton_ = false;
 }
 
 // デストラクタ
@@ -24,6 +28,10 @@ Player::~Player(void)
 // 初期化
 void Player::Init(void)
 {
+	// 弾の初期化
+	prevButton_ = false;
+
+	bullet.Init();
 	
 	// プレイヤー画像の読み込み
 	PlayerModel_ = LoadGraph("Data/images/player_ship.png");
@@ -41,7 +49,7 @@ void Player::Init(void)
 }
 
 // 更新
-void Player::Update(void)
+void Player::Update(NetworkManager& network)
 {
 	// InputManagerの取得
 	InputManager& input = InputManager::GetInstance();
@@ -58,6 +66,31 @@ void Player::Update(void)
 		PosX_ += moveSpeed_;
 	}
 
+	// ジョイスティック取得
+	int stickX = network.GetStickX();
+
+	// 中央付近なら無視（＝入力なし扱い）
+	if (stickX < 480)
+	{
+		PosX_ -= moveSpeed_;
+	}
+	else if (stickX > 600)
+	{
+		PosX_ += moveSpeed_;
+	}
+
+	// 左
+	if (stickX < 523)
+	{
+		PosX_ -= moveSpeed_;
+	}
+
+	// 右
+	if (stickX > 700)
+	{
+		PosX_ += moveSpeed_;
+	}
+
 	// 画面上に出ないようにする
 	if (PosX_ < 0)
 	{
@@ -70,12 +103,36 @@ void Player::Update(void)
 	{
 		PosX_ = Application::SCREEN_SIZE_X - width;
 	}
+
+	// ボタンの現在状態取得
+	bool nowButton = network.GetButton();
+
+	// 押した瞬間のみ発射
+	if (nowButton && !prevButton_)
+	{
+		shoot();
+	}
+
+	// マウスの左でも一応できるようにしている
+	if (input.IsTrgMouseLeft())
+	{
+		shoot();
+	}
+
+	// 次フレーム用に保存
+	prevButton_ = nowButton;
+
+	// 弾の更新
+	bullet.Update();
+
 }
 
 // 描画
 void Player::Draw(void)
 {
 	DrawGraph(static_cast<int>(PosX_), static_cast<int>(PosY_), PlayerModel_, TRUE);
+	// 弾の描画
+	bullet.Draw();
 }
 
 // 解放
@@ -89,4 +146,16 @@ void Player::Release(void)
 		PlayerModel_ = -1;
 	}
 	
+}
+
+// プレイヤーの弾の取得
+Bullet& Player::GetBullet(void)
+{
+	return bullet;
+}
+
+// 弾の発射処理
+void Player::shoot()
+{
+	bullet.Shoot(static_cast<int>(PosX_ + width / 2), static_cast<int>(PosY_ - 5));
 }

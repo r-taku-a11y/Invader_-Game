@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <DxLib.h>
 
 #include "NetworkManager.h"
 
@@ -22,6 +23,8 @@ NetworkManager::~NetworkManager(void)
 // 初期化
 bool NetworkManager::Init(void)
 {
+	button_ = false;
+
 	WSADATA wsaData;
 
 	// Winsock初期化
@@ -83,6 +86,9 @@ void NetworkManager::Update(void)
 
 		button_ = (btn == 1);
 	}
+	
+	DrawFormatString(10,10,GetColor(255, 255, 255),"%s",buffer_
+	);
 }
 
 // 解放
@@ -101,17 +107,17 @@ void NetworkManager::Release(void)
 // X軸取得
 int NetworkManager::GetStickX(void) const
 {
-	return 0;
+	return stickX_;
 }
 
 // Y軸取得
 int NetworkManager::GetStickY(void) const
 {
-	return 0;
+	return stickY_;
 }
 
 // ボタン取得
 bool NetworkManager::GetButton(void) const
 {
-	return false;
+	return button_;
 }

@@ -115,6 +115,14 @@ void Application::Run(void)
 
 				break;
 
+			// ƒQ[ƒ€ƒNƒŠƒA
+			case SceneManager::SCENE_ID::GAMECLEAR:
+
+				gameclear.Update();
+				gameclear.Draw();
+
+				break;
+
 			default:
 				break;
 			}

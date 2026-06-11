@@ -1,6 +1,8 @@
 #pragma once
-#include<vector>
-#include"Enemy.h"
+#include <vector>
+#include "Enemy.h"
+#include "EnemyBullet.h"
+#include "Bullet.h"
 
 class EnemyManager
 {
@@ -13,7 +15,22 @@ public:
 	void Draw(void);				// 描画
 	void Release(void);				// 解放
 
+
+	// 弾との当たり判定
+	void CheckHit(Bullet& bullet);
+
+	// 敵弾を発射する
+	void ShotEnemyBullet(void);
+
+	// 敵が全滅したかどうか
+	bool IsAllDead(void)const;
+
 private:
+
+	// 発射間隔管理
+	int shotTimer_;
+
+	std::vector<EnemyBullet> enemyBulletList_;
 
 	// 敵の一覧
 	std::vector<Enemy>enemyList_;

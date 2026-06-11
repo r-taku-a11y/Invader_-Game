@@ -19,6 +19,8 @@
     <ClInclude Include="src\Objekct\Enemy.h" />
     <ClInclude Include="src\Objekct\EnemyManager.h" />
     <ClInclude Include="src\Manager\NetworkManager.h" />
+    <ClInclude Include="src\Objekct\Bullet.h" />
+    <ClInclude Include="src\Objekct\EnemyBullet.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
@@ -33,5 +35,7 @@
     <ClCompile Include="src\Objekct\Enemy.cpp" />
     <ClCompile Include="src\Objekct\EnemyManager.cpp" />
     <ClCompile Include="src\Manager\NetworkManager.cpp" />
+    <ClCompile Include="src\Objekct\Bullet.cpp" />
+    <ClCompile Include="src\Objekct\EnemyBullet.cpp" />
   </ItemGroup>
 </Project>

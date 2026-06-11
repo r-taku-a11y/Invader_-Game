@@ -133,3 +133,8 @@ int Enemy::GetWidth(void) const
 {
 	return width;
 }
+
+int Enemy::GetHeight(void) const
+{
+	return height;
+}

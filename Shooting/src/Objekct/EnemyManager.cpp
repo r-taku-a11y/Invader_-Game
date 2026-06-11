@@ -20,11 +20,17 @@ void EnemyManager::Init(void)
 	// 横移動速度
 	moveSpeed_ = 0.5f;
 
+	// 発射タイマー初期化
+	shotTimer_ = 0;
+
 	// 壁に当たった時に下へ移動する量
 	moveDown_ = 20.0f;
 
 	// 敵リストを空にする
 	enemyList_.clear();
+
+	// 敵の弾のリストを空にする
+	enemyBulletList_.clear();
 
 	// 赤色の敵(1列目)
 	for (int i = 0; i < 8; i++)
@@ -145,6 +151,22 @@ void EnemyManager::Update(void)
 			enemy.SetPosX(enemy.GetPosX() + move);
 		}
 	}
+
+	// 敵の弾更新
+	for (auto& bullet : enemyBulletList_)
+	{
+		bullet.Update();
+	}
+
+	// タイマー加算
+	shotTimer_++;
+
+	// 60フレームごとに発射
+	if (shotTimer_ >= 60)
+	{
+		ShotEnemyBullet();
+		shotTimer_ = 0;
+	}
 }
 
 // 描画
@@ -163,6 +185,11 @@ void EnemyManager::Draw(void)
 
 		enemy.Draw();
 	}
+
+	for (auto& bullet : enemyBulletList_)
+	{
+		bullet.Draw();
+	}
 }
 
 // 解放
@@ -176,4 +203,135 @@ void EnemyManager::Release(void)
 
 	// 敵リストを空にする
 	enemyList_.clear();
+	// 敵の弾の削除
+	enemyBulletList_.clear();
+}
+
+// 弾との当たり判定
+void EnemyManager::CheckHit(Bullet& bullet)
+{
+	// 弾が存在しない
+	if (!bullet.IsActive())
+	{
+		return;
+	}
+
+	for (auto& enemy : enemyList_)
+	{
+		// 撃破済みは無視
+		if (!enemy.IsAlive())
+		{
+			continue;
+		}
+
+		// 当たり判定
+		if (
+			bullet.GetX() >= enemy.GetPosX() &&
+			bullet.GetX() <= enemy.GetPosX() + enemy.GetWidth() &&
+			bullet.GetY() >= enemy.GetPosY() &&
+			bullet.GetY() <= enemy.GetPosY() + enemy.GetHeight()
+			)
+		{
+			// 敵撃破
+			enemy.kill();
+
+			// 弾の消滅
+			bullet.Disable();
+			
+			// 1発で1体だけ倒す
+			break;
+		}
+	}
+}
+
+// 敵弾発射
+void EnemyManager::ShotEnemyBullet(void)
+{
+
+	// 各列の最下段を保存
+	std::vector<Enemy*> bottomEnemies;
+
+
+	// 8列分
+	for (int column = 0; column < 8; column++)
+	{
+		Enemy* bottomEnemy = nullptr;
+
+		for (auto& enemy : enemyList_)
+		{
+			// 撃破済み
+			if (!enemy.IsAlive())
+			{
+				continue;
+			}
+
+			// この敵が何列目か
+			int enemyColumn =
+				static_cast<int>((enemy.GetPosX() - 20.0f) / 60.0f);
+
+			if (enemyColumn != column)
+			{
+				continue;
+			}
+
+			// 最下段をさがす
+			if (bottomEnemy == nullptr)
+			{
+				bottomEnemy = &enemy;
+			}
+			else if (enemy.GetPosY() > bottomEnemy->GetPosY())
+			{
+				bottomEnemy = &enemy;
+			}
+		}
+
+		// 見つかったら保存する
+		if (bottomEnemy != nullptr)
+		{
+			bottomEnemies.push_back(bottomEnemy);
+		}
+	}
+
+	// 発射可能な敵がいない
+	if (bottomEnemies.empty())
+	{
+		return;
+	}
+
+	// ランダムな列を選ぶ
+	int index = rand() % bottomEnemies.size();
+
+	Enemy* shooter = bottomEnemies[index];
+
+	// 敵弾生成
+	EnemyBullet bullet;
+
+	bullet.Init();
+
+	// 発射
+	bullet.Shoot(
+		static_cast<int>(shooter->GetPosX()) +
+		shooter->GetWidth() / 2,
+
+		static_cast<int>(shooter->GetPosY()) + 48
+	);
+
+	// リストへ追加
+	enemyBulletList_.push_back(bullet);
+}
+
+// 全滅したか
+bool EnemyManager::IsAllDead(void) const
+{
+	for (const auto& enemy : enemyList_)
+	{
+		// 生存している敵がいる
+		if (enemy.IsAlive())
+		{
+			return false;
+		}
+	}
+
+	// 全滅
+	return true;
 }
