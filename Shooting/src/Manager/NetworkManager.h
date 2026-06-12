@@ -9,6 +9,8 @@
 class NetworkManager
 {
 public:
+
+	static NetworkManager& GetInstance();	// シングルトンインスタンスの取得
 	
 	NetworkManager(void);		// コンストラクタ
 	~NetworkManager(void);		// デストラクタ
@@ -22,6 +24,13 @@ public:
 	bool GetButton(void)const;	// ボタン取得
 
 private:
+
+	// コピー禁止
+	NetworkManager(const NetworkManager&) = delete;
+
+	// 代入禁止
+	NetworkManager& operator=(const NetworkManager&) = delete;
+
 
 	// ソケット
 	SOCKET socket_;

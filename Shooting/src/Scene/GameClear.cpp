@@ -19,27 +19,57 @@ void GameClear::Init(void)
 {
 	// 最初は再プレイのほうを選択させておく
 	selectMenu_ = PLAY_AGAIN;
+
+	// フォント作成
+	ClearFont_ = CreateFontToHandle("Arial", 48, 3);
+
+	oldButton_ = false;
 }
 
 // 更新
 void GameClear::Update(void)
 {
+	// Arduinoから送信された最新データを受信
+	network.Update();
+
 	InputManager& input = InputManager::GetInstance();
 
-	// 左キー
+	// ジョイスティック値取得
+	int stickX = network.GetStickX();
+
+	// 左選択
+	if (stickX < 300)
+	{
+		selectMenu_ = PLAY_AGAIN;
+	}
+
+	// 右選択
+	if (stickX > 700)
+	{
+		selectMenu_ = RETURN_TITLE;
+	}
+
+	// キーボードでも操作可能
 	if (input.IsTrgDown(KEY_INPUT_LEFT))
 	{
 		selectMenu_ = PLAY_AGAIN;
 	}
 
-	// 右キー
 	if (input.IsTrgDown(KEY_INPUT_RIGHT))
 	{
 		selectMenu_ = RETURN_TITLE;
 	}
 
+	// ボタンの現在状態の取得
+	bool nowButton = network.GetButton();
+
+	// ボタンを押した瞬間
+	bool buttonTrigger = nowButton && !oldButton_;
+
+	oldButton_ = nowButton;
+
 	// 決定
-	if (input.IsTrgDown(KEY_INPUT_RETURN))
+	if (input.IsTrgMouseLeft() || buttonTrigger)
 	{
 		switch (selectMenu_)
 		{
@@ -65,7 +95,7 @@ void GameClear::Update(void)
 void GameClear::Draw(void)
 {
 	// GAME CLEAR
-	DrawString(300,200,"GAME CLEAR !!",GetColor(255, 255, 0));
+	DrawStringToHandle(200,200,"GAME CLEAR !!",GetColor(255, 255, 0), ClearFont_);
 
 	// PLAY AGAIN選択中
 	if (selectMenu_ == PLAY_AGAIN)
@@ -85,9 +115,13 @@ void GameClear::Draw(void)
 	// 操作説明
 	DrawString(180,500,"LEFT/RIGHT : SELECT   ENTER : DECIDE",GetColor(255, 255, 255));
 
+	DrawFormatString(10,10,GetColor(255, 255, 255),"StickX = %d",network.GetStickX());
+
 }
 
 // 解放
 void GameClear::Release(void)
 {
+	// 作成されたフォント
+	DeleteFontToHandle(ClearFont_);
 }

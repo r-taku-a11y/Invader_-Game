@@ -1,6 +1,7 @@
 #pragma once
 #include "../Objekct/Player.h"
 #include "../Objekct/EnemyManager.h"
+#include "../Objekct/EnemyBullet.h"
 #include "../Manager/NetworkManager.h"
 
 class GameSenen
@@ -20,9 +21,11 @@ public:
 
 private:
 
-	// インスタンスのポインター
+	// クラスのインスタンス
 	Player player;
 	EnemyManager enemy;
-	NetworkManager network;
+	EnemyBullet enbullet;
+	
+	NetworkManager& network = NetworkManager::GetInstance();
 };
 

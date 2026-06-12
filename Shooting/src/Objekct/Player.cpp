@@ -69,26 +69,28 @@ void Player::Update(NetworkManager& network)
 	// ジョイスティック取得
 	int stickX = network.GetStickX();
 
-	// 中央付近なら無視（＝入力なし扱い）
-	if (stickX < 480)
+	// デッドゾーン
+	bool move = true;
+
+	if (stickX > 480 && stickX < 560)
 	{
-		PosX_ -= moveSpeed_;
-	}
-	else if (stickX > 600)
-	{
-		PosX_ += moveSpeed_;
+		move = false;
 	}
 
-	// 左
-	if (stickX < 523)
+	// 左右移動だけ制御
+	if (move)
 	{
-		PosX_ -= moveSpeed_;
-	}
+		// 左
+		if (stickX < 523)
+		{
+			PosX_ -= moveSpeed_;
+		}
 
-	// 右
-	if (stickX > 700)
-	{
-		PosX_ += moveSpeed_;
+		// 右
+		if (stickX > 700)
+		{
+			PosX_ += moveSpeed_;
+		}
 	}
 
 	// 画面上に出ないようにする
@@ -107,8 +109,13 @@ void Player::Update(NetworkManager& network)
 	// ボタンの現在状態取得
 	bool nowButton = network.GetButton();
 
+	// 立ち上がり
+	bool pressd = (nowButton && !prevButton_);
+
+	prevButton_ = nowButton;
+
 	// 押した瞬間のみ発射
-	if (nowButton && !prevButton_)
+	if (pressd)
 	{
 		shoot();
 	}
@@ -152,6 +159,30 @@ void Player::Release(void)
 Bullet& Player::GetBullet(void)
 {
 	return bullet;
+}
+
+// X座標の取得
+float Player::GetX(void)const
+{
+	return PosX_;
+}
+
+// Y座標の取得
+float Player::GetY(void)const
+{
+	return PosY_;
+}
+
+// 横の取得
+int Player::GetWidth(void) const
+{
+	return width;
+}
+
+// 縦
+int Player::GetHeight(void) const
+{
+	return height;
 }
 
 // 弾の発射処理

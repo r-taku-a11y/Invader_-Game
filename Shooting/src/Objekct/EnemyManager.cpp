@@ -335,3 +335,18 @@ bool EnemyManager::IsAllDead(void) const
 	// 全滅
 	return true;
 }
+
+bool EnemyManager::CheckHitPlayer(const Player& player)
+{
+	// 全ての敵弾を調べる
+	for (auto& bullet : enemyBulletList_)
+	{
+		// 当たった
+		if (bullet.CheckHitPlayer(player))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}

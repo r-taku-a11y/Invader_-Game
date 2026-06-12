@@ -4,6 +4,7 @@
 #include "Scene/Title.h"
 #include "Scene/GameSenen.h"
 #include "Scene/GameClear.h"
+#include "Manager/SceneManager.h"
 
 class Application
 {
@@ -59,6 +60,8 @@ public:
 	bool IsReleaseFail(void) const;
 
 private:
+
+	SceneManager::SCENE_ID oldScene_;
 
 	// ƒNƒ‰ƒX
 	Title title_;

@@ -17,7 +17,11 @@ public:
 
 
 	 // ゲット関数
-	 Bullet& GetBullet(void);
+	 Bullet& GetBullet(void);	// 弾
+	 float GetX(void)const;			// プレイヤーのX座標
+	 float GetY(void)const;			// プレイヤーのY座標
+	 int GetWidth(void)const;	// 横幅
+	 int GetHeight(void)const;	// 高さ
 
 private:
 
@@ -36,7 +40,7 @@ private:
 
 	// 画像サイズ
 	int width;			// 横
-	int height;			// 縦
+	int height;			// 高さ
 
 	// ボタン状態保存用
 	bool prevButton_;

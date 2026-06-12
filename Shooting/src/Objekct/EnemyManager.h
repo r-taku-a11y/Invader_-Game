@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include "EnemyBullet.h"
 #include "Bullet.h"
+#include "Player.h"
 
 class EnemyManager
 {
@@ -24,6 +25,9 @@ public:
 
 	// 敵が全滅したかどうか
 	bool IsAllDead(void)const;
+
+	// 敵弾とプレイヤーの当たり判定
+	bool CheckHitPlayer(const Player& player);
 
 private:
 

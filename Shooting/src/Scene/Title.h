@@ -1,5 +1,6 @@
 #pragma once
-#include<DxLib.h>
+#include <DxLib.h>
+#include "../Manager/NetworkManager.h"
 
 
 class Title
@@ -18,6 +19,12 @@ public:
 	bool IsStartGame()const;
 
 private:
+
+	// ネットワーク管理
+	NetworkManager& network = NetworkManager::GetInstance();
+
+	// 前フレームのボタン状態
+	bool oldButton_;
 
 	// ゲーム開始フラグ
 	bool StartGame;

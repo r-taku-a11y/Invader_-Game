@@ -1,4 +1,8 @@
 #pragma once
+
+// 前方宣言
+class Player;
+
 class EnemyBullet
 {
 public:
@@ -24,6 +28,9 @@ public:
 
 	// Y座標取得
 	int GetY(void)const;
+
+	// 弾の当たり判定
+	bool CheckHitPlayer(const Player&player);
 
 private:
 

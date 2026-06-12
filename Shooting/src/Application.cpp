@@ -1,6 +1,5 @@
 #include <DxLib.h>
 #include "Application.h"
-#include "Manager/SceneManager.h"
 #include "Manager/InputManager.h"
 
 // インスタンスの生成
@@ -58,6 +57,8 @@ void Application::Init(void)
 	// キー制御初期化
 	SetUseDirectInputFlag(true);
 
+	oldScene_ = SceneManager::SCENE_ID::TITLE;
+
 	// フレームレート関連
 	currentTime = 0;
 	lastFrameTime = 0;
@@ -83,8 +84,48 @@ void Application::Run(void)
 
 			InputManager::GetInstance().Update();
 
+			if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_E))
+			{
+				gameclear.Init();
+				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMECLEAR);
+			}
+
+			if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_R))
+			{
+				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMESEMEN);
+			}
+
+			if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_T))
+			{
+				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+			}
+
 			// 画面を初期化
 			ClearDrawScreen();
+
+			SceneManager::SCENE_ID currentScene =SceneManager::GetInstance().GetScene();
+
+
+			// シーン変更検知
+			if (oldScene_ != currentScene)
+			{
+				switch (currentScene)
+				{
+				case SceneManager::SCENE_ID::TITLE:
+					title_.Init();
+					break;
+
+				case SceneManager::SCENE_ID::GAMESEMEN:
+					gamesenen.Init();
+					break;
+
+				case SceneManager::SCENE_ID::GAMECLEAR:
+					gameclear.Init();
+					break;
+				}
+
+				oldScene_ = currentScene;
+			}
 
 			// シーンの更新・描画
 			switch (SceneManager::GetInstance().GetScene())
@@ -97,8 +138,6 @@ void Application::Run(void)
 				// タイトルからゲーム開始
 				if (title_.IsStartGame())
 				{
-					// ゲームシーン初期化
-					gamesenen.Init();
 
 					title_.Release();
 
@@ -121,6 +160,12 @@ void Application::Run(void)
 				gameclear.Update();
 				gameclear.Draw();
 
+				if (oldScene_ == SceneManager::SCENE_ID::GAMECLEAR &&
+					currentScene != SceneManager::SCENE_ID::GAMECLEAR)
+				{
+					gameclear.Release();
+				}
+				oldScene_ = currentScene;
 				break;
 
 			default:

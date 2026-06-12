@@ -1,6 +1,7 @@
 #pragma once
 #include <DxLib.h>
-#include"../Common/Vector2.h"
+#include "../Common/Vector2.h"
+#include "../Manager/NetworkManager.h"
 
 class GameClear
 {
@@ -26,8 +27,16 @@ public:
 
 private:
 
+	// クラス
+	NetworkManager& network = NetworkManager::GetInstance();
+
 	// 現在選択中のメニュー
 	int selectMenu_;
+
+	// フォントハンドル
+	int ClearFont_;
+
+	bool oldButton_;
 
 };
 

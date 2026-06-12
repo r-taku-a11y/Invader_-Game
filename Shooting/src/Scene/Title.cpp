@@ -16,6 +16,8 @@ Title::~Title(void)
 // 初期化
 void Title::Init(void)
 {
+	network.Init();
+
 	// ゲーム開始フラグの初期化
 	StartGame = false;
 
@@ -25,24 +27,22 @@ void Title::Init(void)
 	// PRESS ENTER表示フラグ
 	ShowPressKey = true;
 
-	//--------------------------------
 	// フォント作成
-	//--------------------------------
 
-	titleFont_ = CreateFontToHandle(
-		"Arial",
-		64,
-		4);
+	titleFont_ = CreateFontToHandle("Arial",64,4);
 
-	menuFont_ = CreateFontToHandle(
-		"Arial",
-		28,
-		2);
+	menuFont_ = CreateFontToHandle("Arial",28,2);
+
+	// ボタン状態初期化
+	oldButton_ = false;
 }
 
 // 更新
 void Title::Update(void)
 {
+	// 受信
+	network.Update();
+
 	BlinkTimer++;
 
 	// 30フレームごとにPRESS ENTERの表示の切り替えさせる
@@ -53,118 +53,86 @@ void Title::Update(void)
 		BlinkTimer = 0;
 	}
 
-	if (CheckHitKey(KEY_INPUT_RETURN))
+	// 現在のボタン状態
+	bool nowButton = network.GetButton();
+
+	// 押した瞬間判定
+	bool buttonTriggr = nowButton && !oldButton_;
+
+	oldButton_ = nowButton;
+
+	// マウスの左
+	if (InputManager::GetInstance().IsTrgMouseLeft())
 	{
 		StartGame = true;
+	}
+
+	// ボタン
+	if (buttonTriggr)
+	{
+		StartGame = true;
+
+		// ボタンを離すまで待つ
+		while (network.GetButton())
+		{
+			network.Update();
+			ProcessMessage();
+		}
 	}
 }
 
 // 描画
 void Title::Draw(void)
 {
-	//--------------------------------
 	// 画面中央座標
-	//--------------------------------
 
 	int centerX = Application::SCREEN_SIZE_X / 2;
 
-	//--------------------------------
 	// タイトル
-	//--------------------------------
 
 	const char* title = "SPACE INVADER";
 
-	int titleWidth =
-		GetDrawStringWidthToHandle(
-			title,
-			strlen(title),
-			titleFont_);
+	int titleWidth =GetDrawStringWidthToHandle(title,strlen(title),titleFont_);
 
-	DrawStringToHandle(
-		centerX - titleWidth / 2,
-		150,
-		title,
-		GetColor(0, 255, 0),
-		titleFont_);
+	DrawStringToHandle(centerX - titleWidth / 2,150,title,GetColor(0, 255, 0),titleFont_);
 
-	//--------------------------------
 	// サブタイトル
-	//--------------------------------
 
 	const char* subTitle = "DEFEND THE EARTH";
 
-	int subWidth =
-		GetDrawStringWidthToHandle(
-			subTitle,
-			strlen(subTitle),
-			menuFont_);
+	int subWidth =GetDrawStringWidthToHandle(subTitle,strlen(subTitle),menuFont_);
 
-	DrawStringToHandle(
-		centerX - subWidth / 2,
-		230,
-		subTitle,
-		GetColor(255, 255, 0),
-		menuFont_);
+	DrawStringToHandle(centerX - subWidth / 2,230,subTitle,GetColor(255, 255, 0),menuFont_);
 
-	//--------------------------------
 	// PRESS ENTER
-	//--------------------------------
 
 	if (ShowPressKey)
 	{
-		const char* pressText = "PRESS ENTER";
+		const char* pressText = "PRESS BUTTON";
 
-		int pressWidth =
-			GetDrawStringWidthToHandle(
-				pressText,
-				strlen(pressText),
-				menuFont_);
+		int pressWidth =GetDrawStringWidthToHandle(pressText,strlen(pressText),menuFont_);
 
-		DrawStringToHandle(
-			centerX - pressWidth / 2,
-			330,
-			pressText,
-			GetColor(255, 255, 255),
-			menuFont_);
+		DrawStringToHandle(centerX - pressWidth / 2,330,pressText,GetColor(255, 255, 255),menuFont_);
 	}
 
-	//--------------------------------
 	// ゲーム開始
-	//--------------------------------
 
-	const char* startText = "ENTER : GAME START";
+	const char* startText = "BUTTON / CLICK : GAME START";
 
-	int startWidth =
-		GetDrawStringWidthToHandle(
-			startText,
-			strlen(startText),
-			menuFont_);
+	int startWidth =GetDrawStringWidthToHandle(startText,strlen(startText),menuFont_);
 
-	DrawStringToHandle(
-		centerX - startWidth / 2,
-		430,
-		startText,
-		GetColor(255, 255, 255),
-		menuFont_);
+	DrawStringToHandle(centerX - startWidth / 2,430,startText,GetColor(255, 255, 255),menuFont_);
 
-	//--------------------------------
 	// 終了
-	//--------------------------------
 
 	const char* exitText = "ESC : EXIT";
 
-	int exitWidth =
-		GetDrawStringWidthToHandle(
-			exitText,
-			strlen(exitText),
-			menuFont_);
+	int exitWidth =GetDrawStringWidthToHandle(exitText,strlen(exitText),menuFont_);
 
-	DrawStringToHandle(
-		centerX - exitWidth / 2,
-		470,
-		exitText,
-		GetColor(255, 255, 255),
-		menuFont_);
+	DrawStringToHandle(centerX - exitWidth / 2,470,exitText,GetColor(255, 255, 255),menuFont_);
+
+	// デバック
+	// DrawFormatString(10,10,GetColor(255, 255, 255),"BTN=%d",network.GetButton());
 }
 
 // 解放

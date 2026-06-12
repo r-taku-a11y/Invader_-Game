@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include "GameSenen.h"
 #include "../Manager/SceneManager.h"
+#include "../Application.h"
 
 // コンストラクタ
 GameSenen::GameSenen(void)
@@ -36,9 +37,20 @@ void GameSenen::Update(void)
 	// 敵と弾の当たり判定
 	enemy.CheckHit(player.GetBullet());
 
+	// 敵の弾とプレイヤーの当たり判定
+	if (enemy.CheckHitPlayer(player))
+	{
+
+		// ゲームオーバーへ遷移
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
+
+		return;
+	}
+
 	// 敵を全て倒した
 	if (enemy.IsAllDead())
 	{
+
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMECLEAR);
 		return;
 	}

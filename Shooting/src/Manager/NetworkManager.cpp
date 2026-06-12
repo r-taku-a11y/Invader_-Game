@@ -3,11 +3,19 @@
 
 #include "NetworkManager.h"
 
+NetworkManager& NetworkManager::GetInstance()
+{
+	static NetworkManager instance;
+
+	return instance;
+}
+
 // コンストラクタ
 NetworkManager::NetworkManager(void)
 {
 	socket_ = INVALID_SOCKET;
 
+	// 中央値
 	stickX_ = 512;
 	stickY_ = 512;
 
@@ -23,6 +31,11 @@ NetworkManager::~NetworkManager(void)
 // 初期化
 bool NetworkManager::Init(void)
 {
+	if (socket_ != INVALID_SOCKET)
+	{
+		return true;
+	}
+
 	button_ = false;
 
 	WSADATA wsaData;
@@ -59,6 +72,8 @@ bool NetworkManager::Init(void)
 	ioctlsocket(socket_, FIONBIO, &mode);
 
 	return true;
+
+	printfDx("Network Init Success\n");
 }
 
 // 更新
@@ -79,7 +94,7 @@ void NetworkManager::Update(void)
 
 	int x, y,btn;
 
-	if (sscanf_s(buffer_, "JOY,%d,%d,%d", &x, &y, &btn) == 3)
+	if (sscanf_s(buffer_, "%3X%3X%1X", &x, &y, &btn) == 3)
 	{
 		stickX_ = x;
 		stickY_ = y;
@@ -102,6 +117,8 @@ void NetworkManager::Release(void)
 	}
 
 	WSACleanup();
+
+	printfDx("Network Release\n");
 }
 
 // X軸取得
