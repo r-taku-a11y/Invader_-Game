@@ -313,23 +313,12 @@ Shooting
 
 ## ゲームクリアになると鳴る音
 
-
 https://github.com/user-attachments/assets/d770caa9-798d-49e9-a23f-e2b7e1104825
-
 
 ## ゲームオーバーになると鳴る音
 
-
-
 https://github.com/user-attachments/assets/281c3335-573d-4869-9116-3d8846bffe26
-
-
-
 
 ## ゲームシーン
 
-
-
 https://github.com/user-attachments/assets/4e64e94c-1565-4802-a4a0-e96e5ec58932
-
-
