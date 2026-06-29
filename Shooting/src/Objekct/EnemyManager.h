@@ -60,6 +60,21 @@ public:
 	// ハイスコアの取得
 	int GetHiScore(void)const;
 
+	// アイテム出現要求
+	bool IsItemSpawn(void)const;
+
+	// X座標取得
+	float GetItemSpawnX(void)const;
+
+	// Y座標取得
+	float GetItemSpawnY(void) const;
+
+	// 出現フラグをリセット
+	void ResetItemSpawn(void);
+
+	// スコア加算
+	void AddScore(int score);
+
 private:
 
 	// 発射間隔管理
@@ -110,6 +125,13 @@ private:
 
 	// ボーナス機出現済みフラグ
 	bool bonusSpawned_;
+
+	// アイテム出現座標取得
+	float itemSpawnX_;
+	float itemSpawnY_;
+
+	// アイテム出現フラグ
+	bool itemSpawn_;
 
 	// 最終ラウンド
 	static constexpr int MAX_ROUND = 5;

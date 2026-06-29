@@ -151,6 +151,37 @@ arduino_secrets.h に設定してください。
 - ジャンパーワイヤー　複数
 - 抵抗 10KΩ 1KΩ
 
+---
+
+## 通信のフロチャート
+
+```mermaid
+flowchart LR
+
+    subgraph Arduino_Uno_R4_WiFi
+        A[ジョイスティック]
+        B[ボタン]
+        C[OLED]
+        D[ブザー]
+        E[Arduino Uno R4 WiFi]
+    end
+
+    A --> E
+    B --> E
+
+    E --> C
+    E --> D
+
+    E -- UDP(Wi-Fi) --> F[PC]
+
+    F --> G[DxLib]
+    G --> H[インベーダーゲーム]
+
+    H --> G
+```
+
+---
+
 ## システムフローチャート
 
 ``` mermaid
@@ -236,71 +267,50 @@ flowchart TD
 ```text
 コードの構成
 Shooting
-├── Data
-│   ├── Images
-│   │   ├── enemy_orange.png
-│   │   ├── enemy_red.png
-│   │   ├── enemy_white.png
-│   │   ├── enemy_yellow.png
-│   │   ├── player_ship.png
-│   │   └── UFO.png
-│   └── Sound
-│       ├── BGM
-│       │   ├── Game.mp3
-│       │   ├── Title.mp3
-│       │   └── Ufo.mp3
-│       └── SE
-│           ├── Damage.mp3
-│           ├── Destroy.mp3
-│           ├── Enemy.mp3
-│           ├── Enemyextinction.mp3
-│           ├── Gameclear.mp3
-│           ├── Gameover.mp3
-│           ├── Player.mp3
-│           └── Selection.mp3
-├── src
-│   ├── Common
-│   │   ├── Vector2.cpp
-│   │   └── Vector2.h
-│   ├── Manager
-│   │   ├── InputManager.cpp
-│   │   ├── InputManager.h
-│   │   ├── NetworkManager.cpp
-│   │   ├── NetworkManager.h
-│   │   ├── RoundManager.cpp
-│   │   ├── RoundManager.h
-│   │   ├── SceneManager.cpp
-│   │   ├── SceneManager.h
-│   │   ├── SoundManager.cpp
-│   │   └── SoundManager.h
-│   ├── Objekct
-│   │   ├── BonusEnemy.cpp
-│   │   ├── BonusEnemy.h
-│   │   ├── Bullet.cpp
-│   │   ├── Bullet.h
-│   │   ├── Enemy.cpp
-│   │   ├── Enemy.h
-│   │   ├── EnemyBullet.cpp
-│   │   ├── EnemyBullet.h
-│   │   ├── EnemyManager.cpp
-│   │   ├── EnemyManager.h
-│   │   ├── Player.cpp
-│   │   ├── Player.h
-│   │   ├── Shield.cpp
-│   │   └── Shield.h
-│   ├── Scene
-│   │   ├── GameClear.cpp
-│   │   ├── GameClear.h
-│   │   ├── GameOver.cpp
-│   │   ├── GameOver.h
-│   │   ├── GameSenen.cpp
-│   │   ├── GameSenen.h
-│   │   ├── Title.cpp
-│   │   └── Title.h
-│   ├── Application.cpp
-│   ├── Application.h
-│   ├── main.cpp
-│   └── main.h
+├── Common
+│   ├── Vector2.cpp
+│   └── Vector2.h
+├── Manager
+│   ├── InputManager.cpp
+│   ├── InputManager.h
+│   ├── NetworkManager.cpp
+│   ├── NetworkManager.h
+│   ├── RoundManager.cpp
+│   ├── RoundManager.h
+│   ├── SceneManager.cpp
+│   ├── SceneManager.h
+│   ├── SoundManager.cpp
+│   └── SoundManager.h
+├── Objekct
+│   ├── BonusEnemy.cpp
+│   ├── BonusEnemy.h
+│   ├── Bullet.cpp
+│   ├── Bullet.h
+│   ├── Enemy.cpp
+│   ├── Enemy.h
+│   ├── EnemyBullet.cpp
+│   ├── EnemyBullet.h
+│   ├── EnemyManager.cpp
+│   ├── EnemyManager.h
+│   ├── Item.cpp
+│   ├── Item.h
+│   ├── Player.cpp
+│   ├── Player.h
+│   ├── Shield.cpp
+│   └── Shield.h
+├── Scene
+│   ├── GameClear.cpp
+│   ├── GameClear.h
+│   ├── GameOver.cpp
+│   ├── GameOver.h
+│   ├── GameSenen.cpp
+│   ├── GameSenen.h
+│   ├── Title.cpp
+│   └── Title.h
+├── Application.cpp
+├── Application.h
+├── main.cpp
+└── main.h
 ```
 
 ---

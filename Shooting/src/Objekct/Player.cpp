@@ -264,6 +264,16 @@ void Player::ResetButtonState(bool currentState)
 	prevButton_ = currentState;
 }
 
+// 残機を増やす
+void Player::AddLife(void)
+{
+	// 最大残機未満なら回復
+	if (life_ < START_LIFE)
+	{
+		life_++;
+	}
+}
+
 // プレイヤーの弾の取得
 Bullet& Player::GetBullet(void)
 {

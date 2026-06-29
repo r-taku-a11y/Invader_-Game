@@ -110,3 +110,16 @@ bool Shield::IsAlive(void) const
 {
 	return alive_;
 }
+
+// シールドを初期状態に戻す
+void Shield::Repair(void)
+{
+	// 耐久値を最大まで回復
+	hp_ = MAX_HP;
+
+	// 生存状態に戻す
+	alive_ = true;
+
+	// 色も初期に戻す
+	color = GetColor(255, 255, 255);
+}

@@ -4,6 +4,7 @@
 #include "../Objekct/EnemyManager.h"
 #include "../Objekct/EnemyBullet.h"
 #include "../Objekct/Shield.h"
+#include "../Objekct/Item.h"
 #include "../Manager/NetworkManager.h"
 #include "../Manager/RoundManager.h"
 
@@ -28,9 +29,13 @@ private:
 	std::vector<Shield>shiedList_;
 	Shield shield;
 	RoundManager round;
+	Item item;
 
 	// Arduino通信
 	NetworkManager& network = NetworkManager::GetInstance();
+
+	// アイテム出現処理
+	void SpawnItem(void);
 
 	// 送信用タイマー
 	int sendTimer_ ;
@@ -56,6 +61,9 @@ private:
 	// シールド
 	static constexpr float SHIELD_Y = 450.0f;
 	static constexpr float SHIELD_CENTER_OFFSET = 20.0f;
+
+	// スコアアイテムの加算点
+	static constexpr int ITEM_SCORE_POINT = 100;
 
 	// ラウンドごとのシールド数
 	static constexpr int SHIELD_COUNT_TABLE[5] =

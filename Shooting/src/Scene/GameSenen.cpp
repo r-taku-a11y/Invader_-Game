@@ -39,6 +39,9 @@ void GameSenen::Init(void)
 	// 敵の初期化
 	enemy.Init(round.GetRound());
 
+	// アイテムの初期化
+	item.Init();
+
 	// シールドの生成
 	ResetShield();
 
@@ -55,12 +58,19 @@ void GameSenen::Update(void)
 {
 	// インスタンス取得
 	SoundManager* seMana_ = SoundManager::GetInstance();
+
 	// Arduinoから受信
 	network.Update();
+
 	// プレイヤーの更新
 	player.Update(network);
+
 	// 敵の更新
 	enemy.Update();
+
+	// アイテムの更新
+	item.Update();
+
 	// BGMの音の設定
 	seMana_->SetVolumeBGM("GameSenen", BGM_VOLUME);
 
@@ -104,6 +114,67 @@ void GameSenen::Update(void)
 
 	// 敵と弾の当たり判定
 	enemy.CheckHit(player.GetBullet());
+
+	// 敵の撃破時にアイテムを出現させる
+	if (enemy.IsItemSpawn())
+	{
+		// 撃破時のアイテム出現処理
+		SpawnItem();
+
+		// 出現フラグリセット
+		enemy.ResetItemSpawn();
+	}
+
+	// プレイヤーとアイテムの当たり判定
+	if (item.IsActive())
+	{
+		// プレイヤーに当たった
+		if (item.CheckHit(player))
+		{
+
+			// アイテムの種類によって処理を分岐
+			switch (item.GetType())
+			{
+				// シールド回復
+			case Item::ITEM_SHIELD:
+				for (auto& shield : shiedList_)
+				{
+					if (!shield.IsAlive())
+					{
+						// 復活
+						shield.Repair();
+
+						// 1個だけ復活
+						break;
+					}
+				}
+				break;
+
+				// 残機回復
+			case Item::ITEM_LIFE:
+				// 残機を１増やす
+				player.AddLife();
+				break;
+
+				// 弾数アップ
+			case Item::ITEM_POWER:
+				printfDx("Power Item\n");
+				break;
+
+				// スコア加算
+			case Item::ITEM_SCORE:
+				// スコアを100点加算
+				enemy.AddScore(ITEM_SCORE_POINT);
+				break;
+
+			default:
+				break;
+			}
+
+			// アイテムを取得
+			item.Destroy();
+		}
+	}
 
 	// 敵の弾とプレイヤーの当たり判定
 	if (!player.IsInvincible())
@@ -191,6 +262,9 @@ void GameSenen::Draw(void)
 	// 敵の描画
 	enemy.Draw();
 
+	// アイテムの描画
+	item.Draw();
+
 	// ハイスコアの表示
 	DrawFormatString(10, 10, GetColor(255, 255, 255), "HI SCORE : %d", enemy.GetHiScore());
 
@@ -231,17 +305,39 @@ void GameSenen::Release(void)
 
 	// インスタンス取得
 	SoundManager* seMana_ = SoundManager::GetInstance();
+
 	// 音の停止
 	seMana_->StopBGM("GameSenen");
+
 	// 音の開放
 	seMana_->ReleaseSound("GameSenen");
 
 	// ネットワークの開放
 	network.Release();
+
 	// プレイヤーの解放
 	player.Release();
+
 	// 敵の開放
 	enemy.Release();
+
+	// アイテムの開放
+	item.Release();
+}
+
+// アイテムの出現処理
+void GameSenen::SpawnItem(void)
+{
+	// すでにアイテムが出現している場合は何もしない
+	if (item.IsActive())return;
+	
+	// ここでは仮でシールドアイテムを出現させる
+	// item.Spawn(enemy.GetItemSpawnX(), enemy.GetItemSpawnY(), Item::ITEM_SHIELD);
+	// ライフ
+	//item.Spawn(enemy.GetItemSpawnX(), enemy.GetItemSpawnY(), Item::ITEM_LIFE);
+	// スコア
+	item.Spawn(enemy.GetItemSpawnX(), enemy.GetItemSpawnY(), Item::ITEM_SCORE);
+	
 }
 
 // シールド再生成

@@ -14,6 +14,9 @@ public:
 	// 生存判定
 	bool IsAlive(void)const;
 
+	// シールドを初期状態に戻す
+	void Repair(void);
+
 private:
 
 	// シールドのX座標

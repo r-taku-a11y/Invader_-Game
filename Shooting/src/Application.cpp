@@ -239,6 +239,7 @@ bool Application::IsReleaseFail(void) const
 	return isReleaseFail_;
 }
 
+// 1ƒtƒŒ[ƒ€‚ ‚½‚è‚ÌŒo‰ßŠÔ‚ğæ“¾‚·‚é
 float Application::GetDeltaTime() const
 {
 	return deltaTime_;

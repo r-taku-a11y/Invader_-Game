@@ -63,6 +63,13 @@ void EnemyManager::Init(int round)
 	// 前回発射なし
 	lastShotColumn_ = -1;
 
+	// アイテム未出現
+	itemSpawn_ = false;
+
+	// 出現座標初期化
+	itemSpawnX_ = 0.0f;
+	itemSpawnY_ = 0.0f;
+
 	// ラウンド1ならスコアを初期化
 	if (round == 1)
 	{
@@ -408,6 +415,13 @@ void EnemyManager::CheckHit(Bullet& bullet)
 			// 敵撃破
 			enemy.kill();
 
+			// アイテム出現位置を保存
+			itemSpawnX_ = enemy.GetPosX() + enemy.GetWidth() / 2.0f;
+			itemSpawnY_ = enemy.GetPosY() + enemy.GetHeight() / 2.0f;
+
+			// アイテム出現要求
+			itemSpawn_ = true;
+
 			// 敵の色によって得点の加算
 			switch (enemy.GetType())
 			{
@@ -613,4 +627,41 @@ int EnemyManager::GetScore(void) const
 int EnemyManager::GetHiScore(void) const
 {
 	return hiScore_;
+}
+
+// アイテム出現要求
+bool EnemyManager::IsItemSpawn(void) const
+{
+	return itemSpawn_;
+}
+
+// X座標取得
+float EnemyManager::GetItemSpawnX(void) const
+{
+	return itemSpawnX_;
+}
+
+// Y座標取得
+float EnemyManager::GetItemSpawnY(void) const
+{
+	return itemSpawnY_;
+}
+
+// 出現フラグリセット
+void EnemyManager::ResetItemSpawn(void)
+{
+	itemSpawn_ = false;
+}
+
+// スコアの加算処理
+void EnemyManager::AddScore(int score)
+{
+	// スコア加算
+	score_ += score;
+
+	// ハイスコア更新
+	if (score_ > hiScore_)
+	{
+		hiScore_ = score_;
+	}
 }

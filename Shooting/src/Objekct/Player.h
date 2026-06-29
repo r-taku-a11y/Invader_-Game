@@ -25,6 +25,9 @@ public:
 	 // ボタン状態
 	 void ResetButtonState(bool currentState);
 
+	 // 残機を１増やす
+	 void AddLife(void);
+
 	 // ゲット関数
 	 Bullet& GetBullet(void);	// 弾
 	 float GetX(void)const;		// プレイヤーのX座標

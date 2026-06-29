@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Objekct\Item.h" />
     <ClInclude Include="src\Objekct\BonusEnemy.h" />
     <ClInclude Include="src\Manager\RoundManager.h" />
     <ClInclude Include="src\Manager\SoundManager.h" />
@@ -40,6 +41,7 @@
     <ClInclude Include="src\Common\Vector2.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Objekct\Item.cpp" />
     <ClCompile Include="src\Objekct\BonusEnemy.cpp" />
     <ClCompile Include="src\Manager\RoundManager.cpp" />
     <ClCompile Include="src\Manager\SoundManager.cpp" />
