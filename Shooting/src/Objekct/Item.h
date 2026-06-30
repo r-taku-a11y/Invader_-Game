@@ -56,6 +56,9 @@ private:
 	// アイテムの落下速度
 	static constexpr float ITEM_SPEED = 3.0f;
 
+	// アイテム半径
+	static constexpr int ITEM_RADIUS = 8;
+
 	// 座標
 	float x_;
 	float y_;

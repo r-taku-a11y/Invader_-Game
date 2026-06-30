@@ -51,10 +51,10 @@ public:
 	void Release(void);
 
 	// ‰Šú‰»¬Œ÷^¸”s‚Ì”»’è
-	bool IsInitFail(void)const;
+	bool IsInitFail(void) const;
 
 	// ‰ğ•ú¬Œ÷^¸”s‚Ì”»’è
-	bool IsReleaseFail(void)const;
+	bool IsReleaseFail(void) const;
 
 	// ƒQƒbƒ^[
 	float GetDeltaTime() const;

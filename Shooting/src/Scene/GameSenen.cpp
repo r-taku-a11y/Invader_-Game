@@ -96,24 +96,30 @@ void GameSenen::Update(void)
 		}
 	}
 
-	// プレイヤー弾とシールドの当たり判定
-	if (player.GetBullet().IsActive())
+	// プレイヤーのすべての弾とシールドの当たり判定
+	for (auto& bullet : player.GetBulletList())
 	{
-		// 全てのシールドと当たり判定を行う
+		// 発射されていない弾は無視
+		if (!bullet.IsActive())continue;
+
+		// 全てのシールドと判定
 		for (auto& shield : shiedList_)
 		{
 			// シールドに当たった
-			if (shield.checkHit(player.GetBullet().GetX(),player.GetBullet().GetY()))
+			if (shield.checkHit(bullet.GetX(), bullet.GetY()))
 			{
-				// シールドに当たったプレイヤーの弾を消す
-				player.GetBullet().Disable();
+				// 弾を消す
+				bullet.Disable();
 				break;
 			}
 		}
 	}
 
-	// 敵と弾の当たり判定
-	enemy.CheckHit(player.GetBullet());
+	// 全ての敵と弾の当たり判定
+	for (auto& bullet : player.GetBulletList())
+	{
+		enemy.CheckHit(bullet);
+	}
 
 	// 敵の撃破時にアイテムを出現させる
 	if (enemy.IsItemSpawn())
@@ -128,6 +134,26 @@ void GameSenen::Update(void)
 	// プレイヤーとアイテムの当たり判定
 	if (item.IsActive())
 	{
+		// デバック
+		switch (item.GetType())
+		{
+		case Item::ITEM_SHIELD:
+			DrawString(10, 80, "ITEM : SHIELD", GetColor(255, 255, 255));
+			break;
+
+		case Item::ITEM_LIFE:
+			DrawString(10, 80, "ITEM : LIFE", GetColor(255, 255, 255));
+			break;
+
+		case Item::ITEM_POWER:
+			DrawString(10, 80, "ITEM : POWER", GetColor(255, 255, 255));
+			break;
+
+		case Item::ITEM_SCORE:
+			DrawString(10, 80, "ITEM : SCORE", GetColor(255, 255, 255));
+			break;
+		}
+
 		// プレイヤーに当たった
 		if (item.CheckHit(player))
 		{
@@ -158,7 +184,8 @@ void GameSenen::Update(void)
 
 				// 弾数アップ
 			case Item::ITEM_POWER:
-				printfDx("Power Item\n");
+				// 弾レベルアップ
+				player.PowerUp();
 				break;
 
 				// スコア加算
@@ -331,12 +358,38 @@ void GameSenen::SpawnItem(void)
 	// すでにアイテムが出現している場合は何もしない
 	if (item.IsActive())return;
 	
-	// ここでは仮でシールドアイテムを出現させる
-	// item.Spawn(enemy.GetItemSpawnX(), enemy.GetItemSpawnY(), Item::ITEM_SHIELD);
-	// ライフ
-	//item.Spawn(enemy.GetItemSpawnX(), enemy.GetItemSpawnY(), Item::ITEM_LIFE);
-	// スコア
-	item.Spawn(enemy.GetItemSpawnX(), enemy.GetItemSpawnY(), Item::ITEM_SCORE);
+	// ランダムでアイテムを決定させる
+	Item::ITEM_TYPE type;
+
+	// 0～3の乱数を取得
+	int randType = rand() % ITEM_TYPE_COUNT;
+
+	// 乱数によってアイテムを選択
+	switch (randType)
+	{
+		// シールド回復
+	case 0:
+		type = Item::ITEM_SHIELD;
+		break;
+
+		// 残機回復
+	case 1:
+		type = Item::ITEM_LIFE;
+		break;
+
+		// スコア加算
+	case 2:
+		type = Item::ITEM_SCORE;
+		break;
+
+		// 弾数アップ
+	default:
+		type = Item::ITEM_POWER;
+		break;
+	}
+
+	// 決定したアイテムを出現させる
+	item.Spawn(enemy.GetItemSpawnX(), enemy.GetItemSpawnY(), type);
 	
 }
 

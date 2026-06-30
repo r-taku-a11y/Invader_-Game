@@ -8,7 +8,7 @@ public:
 	void Init(void);			// 初期化
 	void Update(void);			// 更新
 	void Draw(void);			// 描画
-	void Shoot(int startX, int startY);			// 弾の発射
+	void Shoot(int x,int y,int level);			// 弾の発射
 	bool IsActive(void)const;	// 弾の生存しているか
 	void Disable(void);			// 弾の無効化
 

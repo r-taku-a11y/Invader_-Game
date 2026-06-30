@@ -65,6 +65,9 @@ private:
 	// スコアアイテムの加算点
 	static constexpr int ITEM_SCORE_POINT = 100;
 
+	// 出現するアイテム数
+	static constexpr int ITEM_TYPE_COUNT = 4;
+
 	// ラウンドごとのシールド数
 	static constexpr int SHIELD_COUNT_TABLE[5] =
 	{

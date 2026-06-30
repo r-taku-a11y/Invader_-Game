@@ -56,13 +56,14 @@ void Bullet::Draw(void)
 }
 
 // 弾の発射
-void Bullet::Shoot(int startX, int startY)
+void Bullet::Shoot(int x, int y, int level)
 {
 	// すでに飛んでいる場合は再発射しない
 	if (active_)return;
 
-	x_ = startX;
-	y_ = startY;
+	// 発射位置を設定
+	x_ = x;
+	y_ = y;
 
 	// フラグを立てる
 	active_ = true;

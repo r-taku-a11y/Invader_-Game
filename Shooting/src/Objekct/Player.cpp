@@ -32,7 +32,8 @@ void Player::Init(void)
 	// 弾の初期化
 	prevButton_ = false;
 
-	bullet.Init();
+	// 弾リストを空にする　
+	bulletList_.clear();
 	
 	// 再度読み込まれないようにする
 	if (PlayerModel_ == -1)
@@ -49,6 +50,9 @@ void Player::Init(void)
 
 	// 無敵時間
 	incincbleTimer_ = 0;
+
+	// 弾の初期レベル
+	bulletLevel_ = DEFAULT_BULLET_LEVEL;
 
 	// タイマー初期化
 	blinkTimer_ = 0.0f;
@@ -73,9 +77,6 @@ void Player::Update(NetworkManager& network)
 {
 	// InputManagerの取得
 	InputManager& input = InputManager::GetInstance();
-
-	// インスタンスの取得
-	SoundManager* seMana_ = SoundManager::GetInstance();
 
 	// フレーム時間取得
 	float deltaTime = Application::GetInstance().GetDeltaTime();
@@ -138,28 +139,26 @@ void Player::Update(NetworkManager& network)
 	// 立ち上がり
 	bool pressd = (nowButton && !prevButton_);
 
-	// 音の音量調整
-	seMana_->SetVolumeSE("Shoot", SHOOT_VOLUME);
-
 	// 押した瞬間のみ発射
 	if (pressd)
 	{
-		seMana_->PlaySE("Shoot");
 		shoot();
 	}
 
 	// マウスの左でも一応できるようにしている
 	if (input.IsTrgMouseLeft())
 	{
-		seMana_->PlaySE("Shoot");
 		shoot();
 	}
 
 	// 次フレーム用に保存
 	prevButton_ = nowButton;
 
-	// 弾の更新
-	bullet.Update();
+	// 全ての弾の更新
+	for (auto& bullet : bulletList_)
+	{
+		bullet.Update();
+	}
 
 	// 無敵時間の更新
 	if (invincible_)
@@ -179,6 +178,15 @@ void Player::Update(NetworkManager& network)
 			blinkTimer_ = 0.0f;
 		}
 	}
+
+	// 非アクティブになった弾をリストから削除
+	bulletList_.erase(std::remove_if(bulletList_.begin(),bulletList_.end(),[](const Bullet& bullet)
+	{
+		// アクティブではない弾を削除対象にする
+		return !bullet.IsActive();
+	}),
+		// remove_ifで後ろへ移動された不要な要素を削除
+		bulletList_.end());
 
 }
 
@@ -201,8 +209,12 @@ void Player::Draw(void)
 	}
 
 	
-	// 弾の描画
-	bullet.Draw();
+	// 全ての弾を描画
+	for (auto& bullet : bulletList_)
+	{
+		bullet.Draw();
+	}
+	
 }
 
 // 解放
@@ -274,10 +286,26 @@ void Player::AddLife(void)
 	}
 }
 
-// プレイヤーの弾の取得
-Bullet& Player::GetBullet(void)
+// 弾レベルアップ
+void Player::PowerUp(void)
 {
-	return bullet;
+	// 最大レベル未満なら強化させる
+	if (bulletLevel_ < MAX_BULLET_LEVEL)
+	{
+		bulletLevel_++;
+	}
+}
+
+// 弾レベルの取得
+int Player::GetBulletLevel(void) const
+{
+	return bulletLevel_;
+}
+
+// プレイヤーの弾の取得
+std::vector<Bullet>& Player::GetBulletList(void)
+{
+	return bulletList_;
 }
 
 // X座標の取得
@@ -319,5 +347,46 @@ int Player::GetModelHandle(void) const
 // 弾の発射処理
 void Player::shoot()
 {
-	bullet.Shoot(static_cast<int>(PosX_ + width / 2), static_cast<int>(PosY_ - 5));
+	// インスタンスの取得
+	SoundManager* seMana_ = SoundManager::GetInstance();
+
+	// 音の音量調整
+	seMana_->SetVolumeSE("Shoot", SHOOT_VOLUME);
+
+
+	seMana_->PlaySE("Shoot");
+
+	// 現在画面に存在する弾数
+	int activeBulletCount = 0;
+
+	// 発射中の弾を数える
+	for (auto& bullet : bulletList_)
+	{
+		if (bullet.IsActive())
+		{
+			activeBulletCount++;
+		}
+	}
+
+	// 最大弾数に達しているなら発射しない
+	if (activeBulletCount >= bulletLevel_)
+	{
+		return;
+	}
+
+	// 発射位置の計算
+	int x = static_cast<int>(PosX_ + width / 2);
+	int y = static_cast<int>(PosY_ - BULLET_Y_OFFSET);
+
+	// 新しい弾の生成
+	Bullet bullet;
+
+	// 弾の初期化
+	bullet.Init();
+
+	// 現在の弾レベルで発射
+	bullet.Shoot(x, y, bulletLevel_);
+
+	// 弾リストへ追加
+	bulletList_.push_back(bullet);
 }

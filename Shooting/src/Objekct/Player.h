@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "Bullet.h"
 
 // クラスの前方宣言
@@ -28,22 +29,29 @@ public:
 	 // 残機を１増やす
 	 void AddLife(void);
 
+	 // 弾レベルアップ
+	 void PowerUp(void);
+
 	 // ゲット関数
-	 Bullet& GetBullet(void);	// 弾
+	 std::vector<Bullet>& GetBulletList(void);	// 弾
 	 float GetX(void)const;		// プレイヤーのX座標
 	 float GetY(void)const;		// プレイヤーのY座標
 	 int GetWidth(void)const;	// 横幅
 	 int GetHeight(void)const;	// 高さ
 	 int GetLife(void)const;	// 残機の取得
 	 int GetModelHandle(void)const;	// プレイヤーモデルの取得
+	 int GetBulletLevel(void)const; // 弾レベル取得
 
 private:
 
 	// 弾クラス
-	Bullet bullet;
+	std::vector<Bullet> bulletList_;
 
 	// 画像ハンドル
 	int PlayerModel_;
+
+	// 現在の弾のレベル
+	int bulletLevel_;
 
 	// 座標
 	float PosX_;
@@ -100,5 +108,11 @@ private:
 
 	// 弾発射位置補正
 	static constexpr int BULLET_Y_OFFSET = 5;
+
+	// 初期弾レベル
+	static constexpr int DEFAULT_BULLET_LEVEL = 1;
+
+	// 最大弾レベル
+	static constexpr int MAX_BULLET_LEVEL = 3;
 };
 
