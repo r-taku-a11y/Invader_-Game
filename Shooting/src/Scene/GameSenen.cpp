@@ -50,6 +50,7 @@ void GameSenen::Init(void)
 
 	// 音の読み込み
 	seMana_->LoadBGM("GameSenen", "Data/Sound/BGM/Game.mp3", false);
+	seMana_->LoadSE("Item", "Data/Sound/SE/Item.mp3", false);
 	
 }
 
@@ -124,8 +125,15 @@ void GameSenen::Update(void)
 	// 敵の撃破時にアイテムを出現させる
 	if (enemy.IsItemSpawn())
 	{
-		// 撃破時のアイテム出現処理
-		SpawnItem();
+		// 0～99までのランダムな数値を取得する
+		int randNum = rand() % RANDOM_MAX;
+
+		// 20%での確率でアイテムを出現させる
+		if (randNum < ITEM_SPAWN_RATE)
+		{
+			// 撃破時のアイテム出現処理
+			SpawnItem();
+		}
 
 		// 出現フラグリセット
 		enemy.ResetItemSpawn();
@@ -134,29 +142,11 @@ void GameSenen::Update(void)
 	// プレイヤーとアイテムの当たり判定
 	if (item.IsActive())
 	{
-		// デバック
-		switch (item.GetType())
-		{
-		case Item::ITEM_SHIELD:
-			DrawString(10, 80, "ITEM : SHIELD", GetColor(255, 255, 255));
-			break;
-
-		case Item::ITEM_LIFE:
-			DrawString(10, 80, "ITEM : LIFE", GetColor(255, 255, 255));
-			break;
-
-		case Item::ITEM_POWER:
-			DrawString(10, 80, "ITEM : POWER", GetColor(255, 255, 255));
-			break;
-
-		case Item::ITEM_SCORE:
-			DrawString(10, 80, "ITEM : SCORE", GetColor(255, 255, 255));
-			break;
-		}
-
 		// プレイヤーに当たった
 		if (item.CheckHit(player))
 		{
+			// アイテム取得時の音の再生
+			seMana_->PlaySE("Item");
 
 			// アイテムの種類によって処理を分岐
 			switch (item.GetType())
@@ -335,9 +325,11 @@ void GameSenen::Release(void)
 
 	// 音の停止
 	seMana_->StopBGM("GameSenen");
+	seMana_->StopSE("Item");
 
 	// 音の開放
 	seMana_->ReleaseSound("GameSenen");
+	seMana_->ReleaseSound("Item");
 
 	// ネットワークの開放
 	network.Release();
@@ -357,40 +349,52 @@ void GameSenen::SpawnItem(void)
 {
 	// すでにアイテムが出現している場合は何もしない
 	if (item.IsActive())return;
-	
-	// ランダムでアイテムを決定させる
-	Item::ITEM_TYPE type;
 
-	// 0～3の乱数を取得
-	int randType = rand() % ITEM_TYPE_COUNT;
+	// 出現可能なアイテムを保存するリスト
+	std::vector<Item::ITEM_TYPE> itemList;
 
-	// 乱数によってアイテムを選択
-	switch (randType)
+	// 重み分だけリストへ追加する
+	for (int i = 0; i < SCORE_WEIGHT; i++)
 	{
-		// シールド回復
-	case 0:
-		type = Item::ITEM_SHIELD;
-		break;
-
-		// 残機回復
-	case 1:
-		type = Item::ITEM_LIFE;
-		break;
-
-		// スコア加算
-	case 2:
-		type = Item::ITEM_SCORE;
-		break;
-
-		// 弾数アップ
-	default:
-		type = Item::ITEM_POWER;
-		break;
+		itemList.push_back(Item::ITEM_SCORE);
 	}
+
+	// 最大レベル未満の時だけ候補に追加する
+	if (player.GetBulletLevel() < player.GetMaxBulletLevel())
+	{
+		for (int i = 0; i < POWER_WEIGHT; i++)
+		{
+			itemList.push_back(Item::ITEM_POWER);
+		}
+	}
+
+	// シールドが壊れている場合のみ候補へ追加
+	if (IsShieldBroken())
+	{
+		for (int i = 0; i < SHIELD_WEIGHT; i++)
+		{
+			itemList.push_back(Item::ITEM_SHIELD);
+		}
+	}
+
+	// 残機が減っている場合のみ候補へ追加
+	if (player.GetLife() < player.GetMaxLife())
+	{
+		for (int i = 0; i < LIFE_WEIGHT; i++)
+		{
+			itemList.push_back(Item::ITEM_LIFE);
+		}
+	}
+
+	// 候補の中からランダムで選択
+	int randIndex = rand() % itemList.size();
+
+	// 出現するアイテムを取得
+	Item::ITEM_TYPE type = itemList[randIndex];
 
 	// 決定したアイテムを出現させる
 	item.Spawn(enemy.GetItemSpawnX(), enemy.GetItemSpawnY(), type);
-	
+
 }
 
 // シールド再生成
@@ -412,4 +416,21 @@ void GameSenen::ResetShield(void)
 		shield.Init(x, SHIELD_Y);
 		shiedList_.push_back(shield);
 	}
+}
+
+// シールドが1つでも壊れているか判定
+bool GameSenen::IsShieldBroken(void) const
+{
+	// 全てのシールドを調べる
+	for (const auto& shield : shiedList_)
+	{
+		// 壊れているシールドを調べる
+		if (!shield.IsAlive())
+		{
+			return true;
+		}
+	}
+
+	// 全て生存している
+	return false;
 }

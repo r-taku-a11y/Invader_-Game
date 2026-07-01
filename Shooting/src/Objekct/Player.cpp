@@ -137,17 +137,12 @@ void Player::Update(NetworkManager& network)
 	bool nowButton = network.GetButton();
 
 	// 立ち上がり
-	bool pressd = (nowButton && !prevButton_);
+	bool pressed = (nowButton && !prevButton_);
 
-	// 押した瞬間のみ発射
-	if (pressd)
+	// Arduinoボタンまたはマウスを押した瞬間
+	if (pressed || input.IsTrgMouseLeft())
 	{
-		shoot();
-	}
-
-	// マウスの左でも一応できるようにしている
-	if (input.IsTrgMouseLeft())
-	{
+		// 発射
 		shoot();
 	}
 
@@ -302,6 +297,18 @@ int Player::GetBulletLevel(void) const
 	return bulletLevel_;
 }
 
+// 最大残機の取得
+int Player::GetMaxLife(void) const
+{
+	return START_LIFE;
+}
+
+// 最大弾レベル取得
+int Player::GetMaxBulletLevel(void) const
+{
+	return MAX_BULLET_LEVEL;
+}
+
 // プレイヤーの弾の取得
 std::vector<Bullet>& Player::GetBulletList(void)
 {
@@ -347,14 +354,12 @@ int Player::GetModelHandle(void) const
 // 弾の発射処理
 void Player::shoot()
 {
+
 	// インスタンスの取得
 	SoundManager* seMana_ = SoundManager::GetInstance();
 
 	// 音の音量調整
 	seMana_->SetVolumeSE("Shoot", SHOOT_VOLUME);
-
-
-	seMana_->PlaySE("Shoot");
 
 	// 現在画面に存在する弾数
 	int activeBulletCount = 0;
@@ -389,4 +394,11 @@ void Player::shoot()
 
 	// 弾リストへ追加
 	bulletList_.push_back(bullet);
+
+	// 効果音が再生中ではない場合だけ再生
+	if (!seMana_->IsPlayingSE("Shoot"))
+	{
+		// 発射できた時だけSEを再生
+		seMana_->PlaySE("Shoot");
+	}
 }

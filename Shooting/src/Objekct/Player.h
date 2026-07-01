@@ -34,14 +34,15 @@ public:
 
 	 // ゲット関数
 	 std::vector<Bullet>& GetBulletList(void);	// 弾
-	 float GetX(void)const;		// プレイヤーのX座標
-	 float GetY(void)const;		// プレイヤーのY座標
-	 int GetWidth(void)const;	// 横幅
-	 int GetHeight(void)const;	// 高さ
-	 int GetLife(void)const;	// 残機の取得
-	 int GetModelHandle(void)const;	// プレイヤーモデルの取得
-	 int GetBulletLevel(void)const; // 弾レベル取得
-
+	 float GetX(void)const;						// プレイヤーのX座標
+	 float GetY(void)const;						// プレイヤーのY座標
+	 int GetWidth(void)const;					// 横幅
+	 int GetHeight(void)const;					// 高さ
+	 int GetLife(void)const;					// 残機の取得
+	 int GetModelHandle(void)const;				// プレイヤーモデルの取得
+	 int GetBulletLevel(void)const;				// 弾レベル取得
+	 int GetMaxLife(void) const;				// 最大残機取得
+	 int GetMaxBulletLevel(void)const;			// 最大弾レベル取得
 private:
 
 	// 弾クラス

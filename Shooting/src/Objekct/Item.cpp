@@ -17,6 +17,13 @@ Item::Item(void)
 
 	// 非アクティブ状態
 	active_ = false;
+
+	// アイテム画像ハンドル初期化
+	for (int i = 0; i <= ITEM_SCORE; i++)
+	{
+		// 未読み込み状態
+		itemImage_[i] = -1;
+	}
 }
 
 // デストラクタ
@@ -39,6 +46,27 @@ void Item::Init(void)
 
 	// 非アクティブ状態
 	active_ = false;
+
+	// アイテム画像の読み込み
+	if (itemImage_[ITEM_SHIELD] == -1)
+	{
+		itemImage_[ITEM_SHIELD] = LoadGraph("Data/Images/Shield.png");
+	}
+
+	if (itemImage_[ITEM_LIFE] == -1)
+	{
+		itemImage_[ITEM_LIFE] = LoadGraph("Data/Images/Life.png");
+	}
+
+	if (itemImage_[ITEM_POWER] == -1)
+	{
+		itemImage_[ITEM_POWER] = LoadGraph("Data/Images/Bullet.png");
+	}
+
+	if (itemImage_[ITEM_SCORE] == -1)
+	{
+		itemImage_[ITEM_SCORE] = LoadGraph("Data/Images/Score.png");
+	}
 }
 
 // 更新
@@ -64,50 +92,25 @@ void Item::Draw(void)
 	// 出現していない場合は更新しない
 	if (!active_)return;
 
-	// アイテムの色
-	int color = GetColor(255, 255, 255);
-
-	// アイテムの種類ごとに色を変更
-	switch (type_)
+	// アイテム画像が読み込まれている場合のみ描画
+	if (itemImage_[type_] != -1)
 	{
-		// シールド回復
-	case ITEM_SHIELD:
-		// 緑（回復のイメージ）
-		color = GetColor(0, 255, 0);
-		break;
-
-		// 残機回復
-	case ITEM_LIFE:
-		// ピンク（ハートをイメージ）
-		color = GetColor(255, 100, 180);
-		break;
-
-		// 弾パワーアップ
-	case ITEM_POWER:
-		// オレンジ（強化のイメージ）
-		color = GetColor(255, 140, 0);
-		break;
-
-		// スコア加算
-	case ITEM_SCORE:
-		// 金色（ボーナスのイメージ）
-		color = GetColor(255, 215, 0);
-		break;
-
-		// アイテム無し
-	default:
-		// 白色
-		color = GetColor(255, 255, 255);
-		break;
+		DrawExtendGraph(static_cast<int>(x_),static_cast<int>(y_),static_cast<int>(x_) + ITEM_SIZE,static_cast<int>(y_) + ITEM_SIZE,itemImage_[type_],TRUE);
 	}
-
-	// 現在は仮の図形で描画
-	DrawCircle(static_cast<int>(x_), static_cast<int>(y_), ITEM_RADIUS, color, TRUE);
 }
 
 // 解放
 void Item::Release(void)
 {
+	// 読み込んだ画像を解放
+	for (int i = 0; i <= ITEM_SCORE; i++)
+	{
+		if (itemImage_[i] != -1)
+		{
+			DeleteGraph(itemImage_[i]);
+			itemImage_[i] = -1;
+		}
+	}
 }
 
 // アイテム出現

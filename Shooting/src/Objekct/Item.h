@@ -59,6 +59,12 @@ private:
 	// アイテム半径
 	static constexpr int ITEM_RADIUS = 8;
 
+	// アイテム画像サイズ
+	static constexpr int ITEM_SIZE = 32;
+
+	// アイテム画像
+	int itemImage_[5];
+
 	// 座標
 	float x_;
 	float y_;

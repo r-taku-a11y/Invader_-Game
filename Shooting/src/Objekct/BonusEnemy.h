@@ -32,7 +32,7 @@ private:
 	static constexpr int DRAW_HEIGHT = 50;
 
 	// 移動速度
-	static constexpr float MOVE_SPEED = 150.0f;
+	static constexpr float MOVE_SPEED = 100.0f;
 
 	// 画像
 	int modelHandle_;

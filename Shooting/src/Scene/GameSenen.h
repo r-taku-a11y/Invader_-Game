@@ -43,6 +43,9 @@ private:
 	// シールドを作り直す
 	void ResetShield(void);
 
+	// シールドが壊れているか判定
+	bool IsShieldBroken(void)const;
+
 	// BGMの音量
 	static constexpr int BGM_VOLUME = 120;
 
@@ -67,6 +70,25 @@ private:
 
 	// 出現するアイテム数
 	static constexpr int ITEM_TYPE_COUNT = 4;
+
+	// スコアアイテムの出現重み
+	// 数字が大きいほど出現しやすくなる
+	static constexpr int SCORE_WEIGHT = 5;
+
+	// パワーアップアイテムの出現重み
+	static constexpr int POWER_WEIGHT = 2;
+
+	// シールド回復アイテムの出現重み
+	static constexpr int SHIELD_WEIGHT = 1;
+
+	// 残機回復アイテムの出現重み
+	static constexpr int LIFE_WEIGHT = 1;
+
+	// アイテム出現確率（％）
+	static constexpr int ITEM_SPAWN_RATE = 20;
+
+	// 乱数の最大値
+	static constexpr int RANDOM_MAX = 100;
 
 	// ラウンドごとのシールド数
 	static constexpr int SHIELD_COUNT_TABLE[5] =

@@ -24,7 +24,7 @@ public:
 	// データパス関連
 	static const std::string PATH_MODEL;
 	static const std::string PATH_IMAGE;
-	static const std::string PATH_SOUND; 
+	static const std::string PATH_SOUND;
 	static const std::string PATH_EFFECT;
 
 	// ラジアン(rad)・度(deg)変換用
@@ -97,5 +97,4 @@ private:
 
 	// 前フレームからの経過時間(秒)
 	float deltaTime_;
-
 };
