@@ -47,6 +47,12 @@ void Item::Init(void)
 	// 非アクティブ状態
 	active_ = false;
 
+	// 左右の揺れ初期化
+	wave_ = 0.0f;
+
+	// 初期X座標
+	startX_ = 0.0f;
+
 	// アイテム画像の読み込み
 	if (itemImage_[ITEM_SHIELD] == -1)
 	{
@@ -77,6 +83,12 @@ void Item::Update(void)
 
 	// 下方向へ移動
 	y_ += speed;
+
+	// 揺れを進める
+	wave_ += WAVE_SPEED;
+
+	// 左右に揺らす
+	x_ = startX_ + sinf(wave_) * WAVE_WIDTH;
 
 	// 画面外に出たら消滅させる
 	if(y_>Application::SCREEN_SIZE_Y)
@@ -119,6 +131,12 @@ void Item::Spawn(float x, float y, ITEM_TYPE type)
 	// 出現位置設定
 	x_ = x;
 	y_ = y;
+
+	// 初期位置を保存
+	startX_ = x;
+
+	// 揺れを初期化
+	wave_ = 0.0f;
 
 	// アイテム種類設定
 	type_ = type;

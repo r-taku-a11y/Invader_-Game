@@ -251,10 +251,6 @@ void SoundManager::PlaySEForce(const std::string& key)
 		StopSoundMem(se->second);
 
 		// 最初から再生
-		PlaySoundMem(
-			se->second,
-			DX_PLAYTYPE_BACK,
-			TRUE
-		);
+		PlaySoundMem(se->second,DX_PLAYTYPE_BACK,TRUE);
 	}
 }

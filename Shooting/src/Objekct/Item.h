@@ -8,7 +8,7 @@ public:
 	Item(void);			// コンストラクタ
 	~Item(void);		// デストラクタ
 
-	// アイテムの種類あ
+	// アイテムの種類
 	enum ITEM_TYPE
 	{
 		ITEM_NONE,		// アイテム無し
@@ -54,13 +54,19 @@ public:
 private:
 
 	// アイテムの落下速度
-	static constexpr float ITEM_SPEED = 3.0f;
+	static constexpr float ITEM_SPEED = 1.5f;
 
 	// アイテム半径
 	static constexpr int ITEM_RADIUS = 8;
 
 	// アイテム画像サイズ
 	static constexpr int ITEM_SIZE = 32;
+
+	// 左右に揺れる速度
+	static constexpr float WAVE_SPEED = 0.1f;
+
+	// 左右に揺れる幅
+	static constexpr float WAVE_WIDTH = 10.0f;
 
 	// アイテム画像
 	int itemImage_[5];
@@ -77,6 +83,12 @@ private:
 
 	// 出現
 	bool active_;
+
+	// 左右に揺れるための角度
+	float wave_;
+
+	// アイテム生成時のX座標
+	float startX_;
 
 };
 

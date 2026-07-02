@@ -31,7 +31,7 @@ public:
 	EnemyManager(void);				// コンストラクタ
 	~EnemyManager(void);			// デストラクタ
 
-	void Init(int round);				// 初期化
+	void Init(int round);			// 初期化
 	void Update(void);				// 更新
 	void Draw(void);				// 描画
 	void Release(void);				// 解放
@@ -54,26 +54,26 @@ public:
 	// 敵弾リスト取得
 	std::vector<EnemyBullet>& GetEnemyBulletList();
 
-	// スコア取得
-	int GetScore(void)const;
-
-	// ハイスコアの取得
-	int GetHiScore(void)const;
-
 	// アイテム出現要求
 	bool IsItemSpawn(void)const;
-
-	// X座標取得
-	float GetItemSpawnX(void)const;
-
-	// Y座標取得
-	float GetItemSpawnY(void) const;
 
 	// 出現フラグをリセット
 	void ResetItemSpawn(void);
 
 	// スコア加算
 	void AddScore(int score);
+
+	// スコア取得
+	int GetScore(void)const;
+
+	// ハイスコアの取得
+	int GetHiScore(void)const;
+
+	// X座標取得
+	float GetItemSpawnX(void)const;
+
+	// Y座標取得
+	float GetItemSpawnY(void) const;
 
 private:
 

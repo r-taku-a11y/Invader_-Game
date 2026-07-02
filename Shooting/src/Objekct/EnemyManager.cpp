@@ -261,6 +261,7 @@ void EnemyManager::Update(void)
 	{
 		// 現在の移動方向に応じて
 		// 移動量を決定する
+		// 三項演算子(true/false)
 		float move = moveRight_ ? moveSpeed_ : -moveSpeed_;
 
 		for (auto& enemy : enemyList_)

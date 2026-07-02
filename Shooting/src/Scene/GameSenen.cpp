@@ -1,4 +1,5 @@
 #include <DxLib.h>
+#include <ctime>
 #include "GameSenen.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
@@ -18,6 +19,10 @@ GameSenen::~GameSenen(void)
 // 初期化
 void GameSenen::Init(void)
 {
+	// 現在時刻を利用して乱数の並びを初期化する
+	// ゲームを起動するたびに違う乱数になる
+	srand(static_cast<unsigned int>(time(nullptr)));
+
 	// UDP通信開始
 	network.Init();
 
@@ -279,9 +284,6 @@ void GameSenen::Draw(void)
 	// 敵の描画
 	enemy.Draw();
 
-	// アイテムの描画
-	item.Draw();
-
 	// ハイスコアの表示
 	DrawFormatString(10, 10, GetColor(255, 255, 255), "HI SCORE : %d", enemy.GetHiScore());
 
@@ -299,6 +301,9 @@ void GameSenen::Draw(void)
 	{
 		shield.Draw();
 	}
+
+	// アイテムの描画
+	item.Draw();
 
 	// 残機アイコンの描画
 	for (int i = 0; i < player.GetLife();i++)
